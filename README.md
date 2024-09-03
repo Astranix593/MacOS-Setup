@@ -29,7 +29,7 @@ To use this installer, follow these steps:
 
 * macOS High Sierra (10.13) or later
 * `installer` command installed (comes pre-installed on macOS)
-* `brew` command installed (can be installed by running `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`)
+* `brew` command installed (can be installed by running `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)""`)
 
 ## Applications Installed
 
