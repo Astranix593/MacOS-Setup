@@ -1,9 +1,17 @@
 #!/bin/bash
 
 # Installer for Macs
-
-
 clear
+
+Logo="\033[34m
+               ___                           
+ |\/|  _.  _    |  ._   _ _|_  _. | |  _  ._ 
+ |  | (_| (_   _|_ | | _>  |_ (_| | | (/_ |                                           
+\033[0m"
+
+
+echo "$Logo"
+sleep 1
 echo "Welcome to the Installer"
 BasePath="$(pwd)"
 
@@ -31,7 +39,7 @@ fi
 
 
 
-if [ -d "$WarpAppPath" ]; then
+if ! [ -d "$WarpAppPath" ]; then
     echo "Warp is not installed. Downloading and installing..."
     echo "Do you want to install warp? (y/Y)"
     read confirm
