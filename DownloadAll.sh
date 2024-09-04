@@ -262,5 +262,7 @@ if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
     fi
 fi
 
+clear
+echo "$Logo"
 echo "Done. You can now close this window"
 exit 0
