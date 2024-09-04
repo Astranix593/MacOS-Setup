@@ -9,10 +9,13 @@ Logo="\033[34m
  |  | (_| (_   _|_ | | _>  |_ (_| | | (/_ |                                           
 \033[0m"
 
-
 echo "$Logo"
 sleep 0.3
 echo "Welcome to the Installer"
+
+echo "Installing xcode..."
+xcode-select --install
+
 BasePath="$(pwd)"
 
 # Main Installers Variable
@@ -180,7 +183,84 @@ else
         echo "Not installing"
     fi
 fi
+# Extra Apps variables
 
+SpotifyLink="https://download.scdn.co/SpotifyInstaller.zip"
+SpotifyPath="/Applications/Spotify.app"
+
+WhiskeyLink="https://data.getwhisky.app/Releases/v2.3.2/Whisky.zip"
+WhiskeyPath="/Applications/Whisky.app"
+
+VSCodeLink="https://vscode.download.prss.microsoft.com/dbazure/download/stable/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/VSCode-darwin-universal.zip"
+VSCodePath="/Applications/Visual Studio Code.app"
+
+DiscordLink="https://discord.com/api/download?platform=osx"
+DiscordPath="/Applications/Discord.app"
+
+echo "Do you want to install Extra Apps? (y/Y)\n"
+echo "Extra Apps are Spotify, Whiskey (For steam), VSCode, and Discord"
+read confirm
+
+if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+    
+    echo "Installing Spotify..."
+    if [ -d "$SpotifyPath" ]; then
+        echo "Spotify is already installed"
+    else
+        echo "Do you want to install Spotify? (y/Y)"
+        read confirm
+        if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+            curl -sSL -o "$BasePath/SpotifyInstaller.zip" "$SpotifyLink"
+            unzip "$BasePath/SpotifyInstaller.zip"
+            rm "$BasePath/SpotifyInstaller.zip"
+            ./Install\ Spotify.app/Contents/MacOS/Install\ Spotify
+            rm -rf ./Install\ Spotify.app
+        fi
+    fi
+    
+    if [ -d "$WhiskeyPath" ]; then
+        echo "Whisky is already installed"
+    else
+        echo "Do you want to install Whisky? (y/Y)"
+        read confirm
+        if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+            curl -sSL -o "$BasePath/Whisky.zip" "$WhiskeyLink"
+            unzip "$BasePath/Whisky.zip"
+            rm "$BasePath/Whisky.zip"
+            mv Whisky.app /Applications
+        fi
+    fi
+
+    if [ -d "$VSCodePath" ]; then
+        echo "VSCode is already installed"
+    else
+        echo "Do you want to install VSCode? (y/Y)"
+        read confirm
+        if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+            curl -sSL -o "$BasePath/VSCode.zip" "$VSCodeLink"
+            unzip "$BasePath/VSCode.zip"
+            rm "$BasePath/VSCode.zip"
+            mv Visual\ Studio\ Code.app /Applications
+        fi
+    fi
+
+    if [ -d "$DiscordPath" ]; then
+        echo "Discord is already installed"
+    else
+        echo "Do you want to install Discord? (y/Y)"
+        read confirm
+        if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+            curl -sSL -o "$BasePath/Discord.dmg" "$DiscordLink"
+            hdiutil attach "$BasePath/Discord.dmg"
+            cp -r "/Volumes/Discord/Discord.app" "/Applications/"
+            hdiutil detach "/Volumes/Discord"
+            rm "$BasePath/Discord.dmg"
+
+            echo "Discord Installed" 
+
+        fi
+    fi
+fi
 
 echo "Done. You can now close this window"
 exit 0
