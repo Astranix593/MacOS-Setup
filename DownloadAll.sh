@@ -125,7 +125,7 @@ if ! [ -d "$StarTestingPath" ]; then
     if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
         echo "Downloading Star Testing..."
         rm "$BasePath/StarTesting.dmg"
-        curl -sSL -o "$BasePath/StarTesting.dmg" "$StarTestingUrl"
+        curl -sSL -o "$BasePath/StarTteesting.dmg" "$StarTestingUrl"
         echo "Star Testing Downloaded"
         echo "Installing Star Testing..."
         hdiutil attach "$BasePath/StarTesting.dmg" -quiet
