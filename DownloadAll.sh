@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Installer for Macs
 clear
 
@@ -15,6 +13,16 @@ echo "Welcome to the Installer"
 
 echo "Installing xcode..."
 xcode-select --install
+
+echo "Installing Homebrew..."
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+MacType="$(uname -m)"
+if [ "$MacType" = "arm64" ]; then
+    echo "export PATH=/opt/homebrew/bin:$PATH" >> ~/.bash_profile && source ~/.bash_profile
+else
+    echo "Can't run on $MacType"
+    exit 1
 
 BasePath="$(pwd)"
 
