@@ -15,7 +15,11 @@ echo "Installing xcode..."
 xcode-select --install
 
 echo "Installing Homebrew..."
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+if [ -x "$(command -v brew)" ]; then
+    /bin/bash -c "$(sudo curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+    echo "Homebrew is already installed"
+fi
 
 MacType="$(uname -m)"
 if [ "$MacType" = "arm64" ]; then
@@ -23,6 +27,7 @@ if [ "$MacType" = "arm64" ]; then
 else
     echo "Can't run on $MacType"
     exit 1
+fi
 
 BasePath="$(pwd)"
 
