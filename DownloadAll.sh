@@ -15,7 +15,7 @@ echo "Installing xcode..."
 xcode-select --install
 
 echo "Installing Homebrew..."
-if [ -x "$(command -v brew)" ]; then
+if ! [ -x "$(command -v brew)" ]; then
     /bin/bash -c "$(sudo curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
     echo "Homebrew is already installed"
@@ -23,7 +23,9 @@ fi
 
 MacType="$(uname -m)"
 if [ "$MacType" = "arm64" ]; then
-    echo "export PATH=/opt/homebrew/bin:$PATH" >> ~/.bash_profile && source ~/.bash_profile
+    # will check if brew is in path already
+    if ! [ -x "$(command -v brew)" ]; then
+        echo "export PATH=/opt/homebrew/bin:$PATH" >> ~/.bash_profile && source ~/.bash_profile
 else
     echo "Can't run on $MacType"
     exit 1
