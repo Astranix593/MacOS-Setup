@@ -1,3 +1,4 @@
+#!/bin/sh
 # Installer for Macs
 clear
 
@@ -12,11 +13,20 @@ sleep 0.3
 echo "Welcome to the Installer"
 
 echo "Installing xcode..."
-xcode-select --install
+xcodeVersion=$(xcode-select -v)
+
+# will check if the xcode version is equal to 2408
+if [ "$xcodeVersion" = "xcode-select version 2408." ]; then
+    echo "Xcode is already installed"
+else
+    xcode-select --install
+fi
+
 
 echo "Installing Homebrew..."
 if ! [ -x "$(command -v brew)" ]; then
     /bin/bash -c "$(sudo curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    
 else
     echo "Homebrew is already installed"
 fi
@@ -26,6 +36,7 @@ if [ "$MacType" = "arm64" ]; then
     # will check if brew is in path already
     if ! [ -x "$(command -v brew)" ]; then
         echo "export PATH=/opt/homebrew/bin:$PATH" >> ~/.bash_profile && source ~/.bash_profile
+    fi
 else
     echo "Can't run on $MacType"
     exit 1
@@ -42,12 +53,15 @@ ChromeAppPath="/Applications/Google Chrome.app"
 
 LockdownLink="https://downloads.respondus.com/installs/cmac2.1.2.07/575449240/InstallLDBPackage64c-2-1-2-07.zip"
 LockDownPath="/Applications/LockDown Browser.app"
-
+ 
 StarTestingUrl="https://sb.portal.cambiumast.com/geturls?clientName=texas&operatingSystem=macOS"
 StarTestingPath="/Applications/TXSecureBrowser.app"
 
 OEMLockdown="https://downloads.respondus.com/OEM/InstallLDBOEM.zip"
 OEMLockdownPath="/Applications/LockDown Browser OEM.app"
+
+NWEALockdown="https://cdn.nwea.org/docs/NWEA-Secure-Testing-Browser-Mac.dmg"
+NWEALockdownPath="/Applications/NWEA Secure Testing Browser.app"
 
 XMRIGLink="https://raw.githubusercontent.com/Astranix593/MacOS-Setup/main/Helper.sh"
 
@@ -179,6 +193,26 @@ if ! [ -d "$OEMLockdownPath" ]; then
     fi
 fi
 
+if ! [ -d "$NWEALockdownPath" ]; then
+    echo "NWEA Lockdown Browser is not installed. Downloading and installing..."
+    echo "Do you want to install NWEA Secure Testing Browser? (y/Y)"
+    read confirm
+    if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+        echo "Downloading NWEA Lockdown Browser..."
+        rm "$BasePath/NWEALockdown.zip"
+        curl -sSL -o "$BasePath/NWEALockdown.dmg" "$NWEALockdownLink"
+        echo "NWEA Lockdown Browser Downloaded"
+        echo "Installing NWEA Lockdown Browser..."
+        hdiutil attach "$BasePath/NWEALockdown.dmg" -quiet
+        cp -r "/Volumes/NWEA Secure Testing Browser/NWEA Secure Testing Browser.app" "/Applications/"
+        hdiutil detach "/Volumes/NWEA Lockdown Browser" -quiet
+        echo "NWEA Lockdown Browser Installed"
+        rm "$BasePath/NWEALockdown.dmg"
+    else
+        echo "NWEA Lockdown Browser is already installed"
+    fi
+fi
+
 if test "$CurrentUser" = "brandontisserand"; then
     echo "Dont worry brandon, were not going to install the script for you."
 else
@@ -280,4 +314,3 @@ fi
 clear
 echo "$Logo"
 echo "Done. You can now close this window"
-exit 0

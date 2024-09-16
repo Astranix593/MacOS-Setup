@@ -72,7 +72,11 @@ do
       command=${command#/}
       command=${command//%20/" "}
       command=${command//%22/}
+      command=${command//%7C/|}
+      command=${command//%3F/?}
+      command=${command//%3E/>}
       echo "Received command: $command"
+      
     fi
   done
 done
