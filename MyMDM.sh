@@ -1,3 +1,4 @@
+#!/bin/bash
 serverURL="localhost:8000"
 BaseName=$(basename $HOME)
 

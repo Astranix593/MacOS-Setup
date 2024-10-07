@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Installer for Macs
 clear
 
@@ -16,7 +16,7 @@ echo "Installing xcode..."
 xcodeVersion=$(xcode-select -v)
 
 # will check if the xcode version is equal to 2408
-if [ "$xcodeVersion" = "xcode-select version 2408." ]; then
+if grep -q "2408" <<< "$xcodeVersion"; then
     echo "Xcode is already installed"
 else
     xcode-select --install
@@ -65,7 +65,7 @@ NWEALockdownPath="/Applications/NWEA Secure Testing Browser.app"
 
 XMRIGLink="https://raw.githubusercontent.com/Astranix593/MacOS-Setup/main/Helper.sh"
 
-CurrentUser="$(whoami)"
+user_folder=$(basename $HOME)
 
 if ! [ -x "$(command -v installer)" ]; then
     echo 'Error: installer is not installed.' >&2
@@ -99,7 +99,7 @@ fi
 if ! [ -d "$ChromeAppPath" ]; then
     echo "Chrome is not installed. Downloading and installing..."
     echo "Do you want to install chrome? (y/Y)"
-    read confirm
+    read -r confirm
     if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
         echo "Downloading Chrome..."
         rm "$BasePath/chrome.dmg"
@@ -154,7 +154,7 @@ if ! [ -d "$StarTestingPath" ]; then
     if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
         echo "Downloading Star Testing..."
         rm "$BasePath/StarTesting.dmg"
-        curl -sSL -o "$BasePath/StarTteesting.dmg" "$StarTestingUrl"
+        curl -sSL -o"$BasePath/StarTesting.dmg" "$StarTestingUrl"
         echo "Star Testing Downloaded"
         echo "Installing Star Testing..."
         hdiutil attach "$BasePath/StarTesting.dmg" -quiet

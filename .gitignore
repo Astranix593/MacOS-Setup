@@ -18,3 +18,5 @@ UpdateAndPush.sh
 *.py
 Build
 *.x.c
+AllDownloads
+*.dmg
